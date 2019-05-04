@@ -27,6 +27,6 @@ Passos para rodar a aplicação:
 
 8. Criar database e rodar as migrations: `docker-compose exec php-fpm php artisan migrate --seed`
 
-9. Abrir a aplicação em: https://localhost:8080
+9. Abrir a aplicação em: http://localhost:8080
 
 10. Login: admin@admin.com / Senha: secret
