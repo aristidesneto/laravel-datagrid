@@ -42,15 +42,15 @@ class HomeController extends Controller
                 ->model($this->post)
                 ->addColumn('Imagem', 'image', false, 130)
                 ->addColumn('Título', 'title')
-                ->addColumn('Categoria', 'category_id')
+                //->addColumn('Categoria', 'category_id')
                 // Pretendo passar desse jeito quando tiver relacionamento
-                // ->addColumn('Categoria', 'category.name')
+                ->addColumn('Categoria', 'category.name')
                 ->addColumn('Data', 'created_at')
                 ->addFilter('title')
                 ->addFilter('category.name')
                 ->addEditAction('home.edit')
                 ->addDeleteAction('home.destroy')
-                ->search();
+                ->search(['category_id']);
 
         return view('home', [
             'dataGrid' => $this->dataGrid
