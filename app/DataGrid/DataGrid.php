@@ -224,17 +224,28 @@ class DataGrid
      *
      * @return void
      */
-    public function search()
+    public function search($additionalColumns = [])
     {
         // Obtem a chave primária do Model (normalmente o ID)
         $keyName = $this->modelOrigin->getKeyName();
 
         // Obtem apenas as colunas com indice igual a Name
         // para poder realizar o select das colunas informadas
-        $columns = collect($this->getColumns())->pluck('name')->toArray();
+        $columns = collect($this->getColumns())->pluck('name');
 
         // Adiciona a variavel keyName para inserir a primary key no inicio do Array
-        array_unshift($columns, $keyName);
+        
+        $columnsWithoutDot = $columns->filter(function($value){
+            return strpos($value, ".") === false;
+        })->toArray();
+
+        $columnsWithDot = $columns->diff($columnsWithoutDot);
+        
+        $relations = $columnsWithDot->map(function($value){
+            return explode('.',$value)[0];
+        })->toArray();
+        
+        array_unshift($columnsWithoutDot, $keyName);
 
         // Aplica Filtros
         $this->applyFilters();
@@ -242,7 +253,9 @@ class DataGrid
         // Aplica Ordenação
         $this->applyOrders();
 
-        $this->rows = $this->model->paginate($this->perPage, $columns);
+        $this->rows = $this->model
+                ->with($relations)
+                ->paginate($this->perPage, array_merge($columnsWithoutDot, $additionalColumns));
 
         // dd($this->model->find(2)->toArray());
         
