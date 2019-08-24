@@ -42,7 +42,18 @@
                 <td>{{ $row->id }}</td>
 
                 @foreach ($dataGrid->getColumns() as $column)
-                    <td>{!! $row->{$column['name']} !!}</td>
+                    <td>
+                        @if (strpos($column['name'], '.'))
+                            @php
+                                $array = explode(".", $column['name']);
+                                $relation = $array[0];
+                                $name = $array[1];
+                            @endphp
+                            {!! $row->$relation->$name !!}
+                        @else
+                            {!! $row->{$column['name']} !!}
+                        @endif                       
+                    </td>
                 @endforeach
 
                 @if (count($dataGrid->actions()))

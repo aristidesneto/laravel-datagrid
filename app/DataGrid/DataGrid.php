@@ -257,6 +257,8 @@ class DataGrid
                 ->with($relations)
                 ->paginate($this->perPage, array_merge($columnsWithoutDot, $additionalColumns));
 
+                // dd($this->rows);
+
         // dd($this->model->find(2)->toArray());
         
         // foreach ($columns as $column) {   
